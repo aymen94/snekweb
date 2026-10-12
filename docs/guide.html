@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Install Snekweb and learn its routing, middleware, request, response, and Node.js APIs.">
+  <title>Guide &amp; API — Snekweb</title>
+  <link rel="icon" href="assets/images/favicon.ico" sizes="any">
+  <link rel="icon" href="assets/images/logo.svg" type="image/svg+xml">
+  <link rel="icon" href="assets/images/favicon-32x32.png" sizes="32x32" type="image/png">
+  <link rel="icon" href="assets/images/favicon-16x16.png" sizes="16x16" type="image/png">
+  <link rel="apple-touch-icon" href="assets/images/apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
+  <script src="theme.js"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header>
+    <nav aria-label="Main navigation">
+      <strong><a class="brand" href="index.html"><img src="assets/images/logo.svg" alt=""><span>Snekweb</span></a></strong>
+      <a href="index.html">Home</a>
+      <a href="guide.html" aria-current="page">Guide &amp; API</a>
+      <a href="index.html#performance">Performance</a>
+      <a href="https://github.com/aymen94/snekweb">GitHub</a>
+      <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch to dark theme">
+        <span aria-hidden="true">◐</span><span data-theme-label></span>
+      </button>
+    </nav>
+  </header>
+
+  <main id="main">
+    <p class="eyebrow">Documentation</p>
+    <h1>Guide &amp; API</h1>
+    <p class="lead">Install Snekweb, register routes and middleware, and connect it to Node.js.</p>
+
+    <section id="installation">
+      <h2>Installation</h2>
+      <p>Requires Node.js 20 or newer. Install from npm:</p>
+      <pre><code>npm install snekweb</code></pre>
+    </section>
+
+    <section id="first-app">
+      <h2>Your first app</h2>
+      <pre><code>import { Snek } from 'snekweb'
+
+const app = new Snek()
+
+app.get('/', (c) =&gt; c.text('Hello, world!'))
+app.get('/users/:id', (c) =&gt; c.json({ id: c.req.param('id') }))
+
+await app.listen(3000)</code></pre>
+      <p>Use <code>fetch(Request)</code> when integrating with another server or testing without opening a socket.
+        <code>listen(port, { host })</code> starts the built-in Node.js HTTP adapter.</p>
+    </section>
+
+    <section id="routing">
+      <h2>Routing</h2>
+      <p>Register routes with <code>get</code>, <code>post</code>, <code>put</code>, <code>patch</code>,
+        <code>delete</code>, <code>options</code>, <code>head</code>, <code>all</code>, or
+        <code>on(method, path, ...handlers)</code>. The generic method accepts methods without a dedicated helper,
+        including <code>CONNECT</code>, <code>TRACE</code>, and <code>QUERY</code>; the exported <code>METHODS</code>
+        constant lists the built-in HTTP methods. Paths support named <code>:param</code> segments and
+        <code>*</code> wildcards. <code>HEAD</code> falls back to a matching <code>GET</code> route and suppresses
+        the response body.</p>
+      <pre><code>app.get('/users/:id', (c) =&gt; c.json({ id: c.req.param('id') }))
+
+app.group('/api', (api) =&gt; {
+  api.get('/health', (c) =&gt; c.json({ ok: true }))
+  api.get('/users/:id', (c) =&gt; c.json({ id: c.req.param('id') }))
+})</code></pre>
+      <p>Unknown paths use the default <code>404</code> response. A known path with an unsupported method returns
+        <code>405</code> and an <code>Allow</code> header; unhandled <code>OPTIONS</code> requests receive
+        <code>204</code> with the allowed methods. Register an explicit <code>OPTIONS</code> route to customize it.</p>
+    </section>
+
+    <section id="middleware">
+      <h2>Middleware and errors</h2>
+      <p>Middleware runs in registration order and receives <code>(context, next)</code>. It can run logic before and
+        after downstream handlers. Path-scoped middleware matches that path and its descendants, not similarly
+        prefixed sibling paths.</p>
+      <pre><code>app.use(async (c, next) =&gt; {
+  const started = Date.now()
+  await next()
+  console.log(c.req.url.pathname, Date.now() - started)
+})
+
+app.use('/api', async (c, next) =&gt; {
+  c.header('x-api', 'v1')
+  await next()
+})</code></pre>
+      <p>Customize missing routes with <code>notFound(handler)</code> and errors with
+        <code>onError(handler)</code>. Handlers must return a Web API <code>Response</code>.</p>
+    </section>
+
+    <section id="request-response">
+      <h2>Request and response helpers</h2>
+      <div class="grid">
+        <article class="card">
+          <h3>Read a request</h3>
+          <p><code>c.req.param(name)</code>, <code>query(name)</code>, <code>queries(name)</code>,
+            <code>header(name)</code>, <code>contentType()</code>, <code>cookie(name)</code>,
+            <code>json()</code>, <code>text()</code>, <code>formData()</code>, and <code>arrayBuffer()</code>.</p>
+        </article>
+        <article class="card">
+          <h3>Build a response</h3>
+          <p><code>c.text()</code>, <code>html()</code>, <code>json()</code>, <code>redirect()</code>, and
+            <code>body()</code> return standard Web API <code>Response</code> objects.</p>
+        </article>
+        <article class="card">
+          <h3>Set headers and cookies</h3>
+          <p><code>c.header(name, value)</code>, <code>c.cookie(name, value, options)</code>, and
+            <code>c.deleteCookie(name, options)</code> configure response headers and cookies.</p>
+        </article>
+      </div>
+      <pre><code>app.post('/echo', async (c) =&gt; {
+  const data = await c.req.json()
+  return c.json({ received: data }, 201)
+})</code></pre>
+    </section>
+
+    <section id="static-files">
+      <h2>Static files</h2>
+      <p><code>serveStatic(root)</code> creates middleware for basic static-file serving. It supports MIME types,
+        optional index files, conditional <code>Last-Modified</code> requests, and traversal/symlink containment
+        checks. It serves <code>GET</code> and <code>HEAD</code>, falls through for missing files, and does not
+        provide directory listings or range requests.</p>
+      <pre><code>import { Snek, serveStatic } from 'snekweb'
+
+const app = new Snek()
+app.use('/assets', serveStatic('./public'))</code></pre>
+    </section>
+
+    <section id="node">
+      <h2>Node.js integration</h2>
+      <p><code>listen()</code> uses Node.js <code>node:http</code> for socket handling and HTTP parsing, adapts
+        requests to Fetch API objects, and streams responses with backpressure. The optional C++ N-API addon is
+        only a capability probe: it is not loaded for normal use and does not handle requests. Snekweb does not
+        bind OS sockets directly.</p>
+      <p>All exported API declarations are included for TypeScript users. Application-level middleware can provide
+        policies such as authentication, validation, rate limiting, or CORS.</p>
+    </section>
+
+    <section id="development">
+      <h2>Development and benchmarks</h2>
+      <pre><code>npm test
+npm run bench</code></pre>
+      <p>The router benchmark measures in-process Snekweb workloads. For an optional local HTTP comparison, see
+        <a href="index.html#performance">the methodology and results on the home page</a>. Run both on the same machine and workload before
+        drawing throughput conclusions.</p>
+    </section>
+
+    <footer>
+      <p><a href="index.html">Home</a> · <a href="index.html#performance">Performance</a> ·
+        <a href="README.md">Documentation editing instructions</a></p>
+      <p><a href="https://github.com/aymen94/snekweb">GitHub</a> ·
+        <a href="https://www.npmjs.com/package/snekweb">npm</a> ·
+        <a href="https://github.com/aymen94/snekweb/issues">Report an issue</a></p>
+    </footer>
+  </main>
+</body>
+
+</html>

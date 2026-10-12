@@ -1,0 +1,39 @@
+{
+  "name": "snekweb",
+  "version": "1.0.0",
+  "description": "A tiny Node.js web framework",
+  "keywords": ["node", "web", "framework", "tiny", "fast"],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/aymen94/snekweb.git"
+  },
+  "homepage": "https://aymen94.github.io/snekweb/",
+  "bugs": {
+    "url": "https://github.com/aymen94/snekweb/issues"
+  },
+  "type": "module",
+  "main": "./src/index.js",
+  "exports": {
+    ".": {
+      "types": "./types/index.d.ts",
+      "import": "./src/index.js"
+    }
+  },
+  "files": [
+    "src",
+    "types",
+    "native",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "node test/framework.test.js",
+    "bench": "node benchmark/router.js",
+    "bench:frameworks": "node benchmark/frameworks.js",
+    "build:native": "node-gyp rebuild --directory native"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "license": "MIT"
+}

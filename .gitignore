@@ -1,0 +1,21 @@
+# Dependencies and npm cache
+node_modules/
+.npm-cache-temp/
+
+# Logs and test coverage
+*.log
+coverage/
+
+# Native addon build output
+native/build/
+*.node
+
+# Local environment files
+.env
+.env.*
+!.env.example
+
+# Operating system files
+.DS_Store
+Thumbs.db
+Desktop.ini

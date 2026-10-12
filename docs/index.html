@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Snekweb is a lightweight Node.js web framework with a small, fast routing layer.">
+  <title>Snekweb — lightweight Node.js web framework</title>
+  <link rel="icon" href="assets/images/favicon.ico" sizes="any">
+  <link rel="icon" href="assets/images/logo.svg" type="image/svg+xml">
+  <link rel="icon" href="assets/images/favicon-32x32.png" sizes="32x32" type="image/png">
+  <link rel="icon" href="assets/images/favicon-16x16.png" sizes="16x16" type="image/png">
+  <link rel="apple-touch-icon" href="assets/images/apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
+  <script src="theme.js"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header>
+    <nav aria-label="Main navigation">
+      <strong><a class="brand" href="index.html"><img src="assets/images/logo.svg" alt=""><span>Snekweb</span></a></strong>
+      <a href="index.html" aria-current="page">Home</a>
+      <a href="guide.html">Guide &amp; API</a>
+      <a href="#performance">Performance</a>
+      <a href="https://github.com/aymen94/snekweb">GitHub</a>
+      <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch to dark theme">
+        <span aria-hidden="true" data-theme-icon>☾</span>
+      </button>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="hero">
+      <p class="eyebrow">A lean request path · tiny footprint</p>
+      <h1>Fast routes.<br><span>Less to carry.</span></h1>
+      <p class="lead">Snekweb is a compact Node.js web framework with a lightweight routing and middleware layer.
+        It matches a route, runs your handler, and returns a standard response through Node.js <code>node:http</code>.
+        The animation shows its goal: keep framework work between request and response small.</p>
+      <div class="flow-demo" role="img" aria-label="A GET hello request passes through the Snekweb router and handler, then returns a 200 OK response">
+        <span class="flow-step"><span class="flow-label">REQUEST</span><code>GET /hello</code></span>
+        <span class="flow-line" aria-hidden="true"></span>
+        <span class="flow-step flow-router"><span class="flow-label">SNEKWEB ROUTER</span><code>match → handler</code></span>
+        <span class="flow-line" aria-hidden="true"></span>
+        <span class="flow-step"><span class="flow-label">RESPONSE</span><code class="response">200 OK</code></span>
+      </div>
+      <div class="hero-stats" aria-label="Snekweb at a glance">
+        <div class="hero-stat"><strong>12.3 <span>kB</span></strong><small>Packed npm package</small></div>
+        <div class="hero-stat"><strong>0</strong><small>Dependencies</small></div>
+        <a class="hero-stat hero-stat-link hero-stat-speed" href="#performance">
+          <strong>Low-overhead routing</strong><small>See the same-workload comparison</small>
+        </a>
+      </div>
+      <div class="actions">
+        <a class="button primary" href="guide.html">Read the guide</a>
+        <a class="button" href="https://github.com/aymen94/snekweb">View on GitHub</a>
+      </div>
+      <div class="badges" aria-label="Project badges">
+        <a href="https://www.npmjs.com/package/snekweb"><img src="https://img.shields.io/npm/v/snekweb?color=72e0ae&label=npm" alt="npm version"></a>
+        <a href="https://github.com/aymen94/snekweb/blob/main/LICENSE"><img src="https://img.shields.io/github/license/aymen94/snekweb?color=72e0ae" alt="MIT license"></a>
+      </div>
+    </section>
+
+    <section aria-labelledby="install-title">
+      <h2 id="install-title">Install</h2>
+      <pre><code>npm install snekweb</code></pre>
+      <p>Requires Node.js 20 or newer. See the <a href="guide.html#installation">installation and first-app guide</a>
+        for a complete example.</p>
+    </section>
+
+    <section aria-labelledby="features-title">
+      <h2 id="features-title">A small, useful toolkit</h2>
+      <div class="grid">
+        <article class="card">
+          <h3>Predictable routing</h3>
+          <p>HTTP methods, path parameters, route groups, and a simple middleware pipeline.</p>
+        </article>
+        <article class="card">
+          <h3>Web-standard responses</h3>
+          <p>JSON, text, redirects, response headers, cookies, and streamed Node.js responses.</p>
+        </article>
+        <article class="card">
+          <h3>Practical essentials</h3>
+          <p>Body readers, static files, automatic <code>OPTIONS</code>, and <code>405</code> responses.</p>
+        </article>
+      </div>
+      <p>For the full APIs, examples, and Node.js integration details, visit the <a href="guide.html">guide</a>.
+        Framework trade-offs and benchmark methodology are compared below.</p>
+    </section>
+
+    <section id="comparison">
+      <p class="eyebrow">Choose the right tool</p>
+      <h2>Framework comparison</h2>
+      <p class="lead">These projects serve different needs. Compare their design trade-offs, then benchmark your own
+        workload before making performance decisions.</p>
+
+      <section id="features">
+        <h3>Feature overview</h3>
+        <div class="panel">
+          <p>Snekweb is for compact Node.js applications where a small core, no runtime dependencies, and Fetch API
+            compatibility are useful. Its trade-off is a younger project and fewer batteries included.</p>
+          <ul>
+            <li><strong>Snekweb:</strong> small Node.js-only core, route groups, static-file middleware, and Fetch
+              <code>Request</code>/<code>Response</code> handling.</li>
+            <li>Hono: Web-standard APIs across Node.js, edge, and other JavaScript
+              runtimes, with a broad middleware collection.</li>
+            <li>Fastify: mature plugin architecture and schema-based
+              validation/serialization for Node.js services.</li>
+            <li>Express: widely adopted Node.js framework with an extensive
+              middleware ecosystem and familiar <code>req</code>/<code>res</code> API.</li>
+          </ul>
+          <p>This is a feature comparison, not a universal ranking. For extensive plugins, built-in schema workflows,
+            or a larger ecosystem, another framework may fit better. See the
+            <a href="https://github.com/aymen94/snekweb#why-snekweb">project trade-offs</a>.</p>
+        </div>
+      </section>
+
+      <section id="performance">
+        <h3>Performance — Snekweb as the 100% baseline</h3>
+        <p>All frameworks below were tested locally with the same Node.js HTTP workload. Snekweb is pinned first as the
+          100% baseline; the other frameworks are ordered from highest to lowest measured median throughput. Labels show
+          how much faster or slower each framework was than Snekweb in this run. Small differences may be normal
+          run-to-run noise, and throughput does not measure request latency.</p>
+
+        <div class="performance">
+          <h4>Median throughput · difference from Snekweb</h4>
+          <figure>
+            <ol aria-label="Snekweb baseline followed by frameworks ordered from fastest to slowest">
+              <li class="performance-row is-top">
+                <span class="performance-name">Snekweb</span>
+                <span class="bar-track" role="meter" aria-label="Snekweb baseline median throughput" aria-valuemin="0" aria-valuemax="110" aria-valuenow="100"><span class="bar-fill" style="width:90.9%"></span></span>
+                <span class="performance-value">100% baseline</span>
+              </li>
+              <li class="performance-row">
+                <span class="performance-name">Koa</span>
+                <span class="bar-track" role="meter" aria-label="Koa median throughput relative to Snekweb" aria-valuemin="0" aria-valuemax="110" aria-valuenow="104.7"><span class="bar-fill" style="width:95.2%"></span></span>
+                <span class="performance-value">4.7% faster</span>
+              </li>
+              <li class="performance-row">
+                <span class="performance-name">Fastify</span>
+                <span class="bar-track" role="meter" aria-label="Fastify median throughput relative to Snekweb" aria-valuemin="0" aria-valuemax="110" aria-valuenow="103.6"><span class="bar-fill" style="width:94.2%"></span></span>
+                <span class="performance-value">3.6% faster</span>
+              </li>
+              <li class="performance-row">
+                <span class="performance-name">Restify</span>
+                <span class="bar-track" role="meter" aria-label="Restify median throughput relative to Snekweb" aria-valuemin="0" aria-valuemax="110" aria-valuenow="103.6"><span class="bar-fill" style="width:94.2%"></span></span>
+                <span class="performance-value">3.6% faster</span>
+              </li>
+              <li class="performance-row">
+                <span class="performance-name">Hono</span>
+                <span class="bar-track" role="meter" aria-label="Hono median throughput relative to Snekweb" aria-valuemin="0" aria-valuemax="110" aria-valuenow="103.3"><span class="bar-fill" style="width:93.9%"></span></span>
+                <span class="performance-value">3.3% faster</span>
+              </li>
+              <li class="performance-row">
+                <span class="performance-name">Express</span>
+                <span class="bar-track" role="meter" aria-label="Express median throughput relative to Snekweb" aria-valuemin="0" aria-valuemax="110" aria-valuenow="102.9"><span class="bar-fill" style="width:93.5%"></span></span>
+                <span class="performance-value">2.9% faster</span>
+              </li>
+              <li class="performance-row">
+                <span class="performance-name">H3</span>
+                <span class="bar-track" role="meter" aria-label="H3 median throughput relative to Snekweb" aria-valuemin="0" aria-valuemax="110" aria-valuenow="102.6"><span class="bar-fill" style="width:93.3%"></span></span>
+                <span class="performance-value">2.6% faster</span>
+              </li>
+              <li class="performance-row">
+                <span class="performance-name">Hapi</span>
+                <span class="bar-track" role="meter" aria-label="Hapi median throughput relative to Snekweb" aria-valuemin="0" aria-valuemax="110" aria-valuenow="102.0"><span class="bar-fill" style="width:92.7%"></span></span>
+                <span class="performance-value">2.0% faster</span>
+              </li>
+            </ol>
+            <figcaption>Node.js v24.19.0 on Windows x64; eight samples of 5,000 requests each at concurrency 25.
+              Shared request: <code>GET /users/42</code>, returning <code>text/plain: 42</code>. Hono used
+              <code>@hono/node-server</code>. “Faster” means higher median throughput than Snekweb in this run; a
+              negative difference would mean slower throughput. Differences are rounded to one decimal place.</figcaption>
+          </figure>
+        </div>
+
+        <p class="performance-note">This small local HTTP test includes client, server, and adapter overhead and is
+          only a snapshot. The earlier single-pass benchmark timed frameworks in a fixed order without sufficient
+          warmup, biasing results with JIT and runtime warmup; it should not be used for comparison. The current runner
+          warms each server and rotates the sample order. Results can still change with hardware, Node.js/framework
+          versions, workload, and system load.</p>
+      </section>
+
+      <section id="reproduce">
+        <h3>Reproduce the measurement</h3>
+        <p>The optional benchmark warms each server, sends a shared <code>GET /users/42</code> request, and checks a
+          <code>200 text/plain</code> response from each framework's Node.js HTTP server. It rotates framework order
+          between samples and compares medians relative to Snekweb (fixed at 100%). Its measurements include
+          client/server and adapter overhead as well as framework work.</p>
+        <pre class="install-command"><code>npm install --no-save --package-lock=false hono@4.13.9 @hono/node-server@2.1.4 fastify@5.12.5 express@5.3.0 h3@2.0.1-rc.29 koa@3.2.1 restify@12.0.0 @hapi/hapi@21.4.10
+npm run bench:frameworks</code></pre>
+        <p>Run from the repository root. Adjust <code>ITERATIONS</code>, <code>CONCURRENCY</code>,
+          <code>SAMPLES</code>, and <code>WARMUP</code> for your environment. The output includes framework versions,
+          direct benchmark dependencies, and normalized percentages, but no raw throughput numbers. It uses a shared
+          route and checks each response. Use the same Node.js version, machine, workload, and settings for every
+          candidate, and prefer a production-like workload for decisions. The optional packages are not Snekweb
+          runtime dependencies.</p>
+        <p>Sources: <a href="https://github.com/aymen94/snekweb/blob/main/benchmark/frameworks.js">HTTP benchmark
+          implementation</a>, <a href="https://github.com/aymen94/snekweb/blob/main/benchmark/router.js">in-process
+          router benchmark</a>, and <a href="https://github.com/aymen94/snekweb/blob/main/README.md#why-snekweb">project
+          comparison notes</a>.</p>
+      </section>
+    </section>
+
+    <aside class="note">
+      <p><strong>Transport note:</strong> Snekweb uses Node.js <code>node:http</code> for sockets and HTTP parsing.
+        The framework optimizes routing and request handling; it does not bind OS sockets directly or replace Node's
+        HTTP server with its C++ addon.</p>
+    </aside>
+
+    <footer>
+      <p>Snekweb is an independent project built around standard JavaScript and Web APIs. Released under the MIT license.</p>
+      <p><a href="https://github.com/aymen94/snekweb">GitHub</a> ·
+        <a href="https://www.npmjs.com/package/snekweb">npm</a> ·
+        <a href="https://github.com/aymen94/snekweb/issues">Report an issue</a></p>
+      <p>Documentation: <a href="README.md">edit and publish these pages</a>.</p>
+    </footer>
+  </main>
+</body>
+
+</html>
